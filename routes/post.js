@@ -119,14 +119,15 @@ router.put('/update_post/:id', async (req, res) => {
 
     if (result.error) {
         res.status(400).send(error.details[0].message);
-    } else {
+    } else {        
         //res.status(200).send({ status: true, message: "Post updated successfully" })
         const post = await Post.findByIdAndUpdate(req.params.id, {
             title: req.body.title,
             body: req.body.body
         }, { new: true });
         if (!post) return res.status(400).send('The post with given Id was not found');
-        res.send(post);
+        // res.send(post);
+        res.status(200).send({ status: true, message: 'post updated successfully', data: post })
     }    
 })
 
