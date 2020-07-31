@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 
 const post = require('./routes/post');
 const comment = require('./routes/comment');
+const users = require('./routes/users');
 
 app.use(function (req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
@@ -28,6 +29,7 @@ app.use(express.json());
 app.use('/', post);
 app.use('/api/v1', post);
 app.use('/api/v1', comment);
+app.use('/api/v1', users);
 
 const port = process.env.PORT || 4500;
 app.listen(port, () => console.log(`<==== Listening on port ${port} ====>`))
