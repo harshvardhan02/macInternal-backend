@@ -56,7 +56,16 @@ router.post('/create_post', async (req, res) => {
 ============================================================================== */
 
 router.get('/get_posts', async (req, res) => {
+    // for pagination example
+    // http://localhost:4500/api/v1/get_posts?page=0&limit=5
+    const pageOptions = {
+        page: parseInt(req.query.page),
+        limit: parseInt(req.query.limit)
+    }
+
     const posts = await Post.find()
+        .skip(pageOptions.page * pageOptions.limit)
+        .limit(pageOptions.limit)
         .exec(function (err, result) {
             if (err) {
                 let row = {
@@ -119,7 +128,7 @@ router.put('/update_post/:id', async (req, res) => {
 
     if (result.error) {
         res.status(400).send(error.details[0].message);
-    } else {        
+    } else {
         //res.status(200).send({ status: true, message: "Post updated successfully" })
         const post = await Post.findByIdAndUpdate(req.params.id, {
             title: req.body.title,
@@ -128,14 +137,14 @@ router.put('/update_post/:id', async (req, res) => {
         if (!post) return res.status(400).send('The post with given Id was not found');
         // res.send(post);
         res.status(200).send({ status: true, message: 'post updated successfully', data: post })
-    }    
+    }
 })
 
 /*===============================================================================
                             Delete Api By Id
 ============================================================================== */
 
-router.delete('/delete_post/:id', async (req, res) => {    
+router.delete('/delete_post/:id', async (req, res) => {
     const post = await Post.findByIdAndDelete(req.params.id)
     if (!post) {
         res.status(400).send('The post with given Id was not found')
